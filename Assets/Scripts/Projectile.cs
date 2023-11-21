@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    [Header("Projectile")]
     GameObject projectile;
     [SerializeField] GameObject player;
     [SerializeField] float speed;
+
+    [Header("Rhythm")]
+    [SerializeField] AudioSource music;
+    [SerializeField] AudioSource test;
+    [SerializeField] float bpm;
+    [SerializeField] float interval = 0;
+    int lastInterval = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -17,7 +25,29 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && gameObject.name == "Temp Projectile")
+        interval = (music.timeSamples / (music.clip.frequency * (60 / (bpm * 2)))) - 0.027f;
+        if (Mathf.FloorToInt(interval) != lastInterval)
+        {
+            lastInterval = Mathf.FloorToInt(interval);
+            if (lastInterval % 4 == 0)
+            {
+                FireProjectile();
+            }
+            /*switch (Mathf.FloorToInt(interval))
+            {
+
+            }*/
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FireProjectile();
+        }
+    }
+
+    void FireProjectile()
+    {
+        if (gameObject.name == "Temp Projectile")
         {
             projectile = Instantiate(gameObject);
             projectile.name = "Projectile";
