@@ -7,7 +7,9 @@ public class Player : MonoBehaviour
     Rigidbody rig;
     [SerializeField] GameObject boss;
     [SerializeField] float speed;
-    [SerializeField] float health = 120f;
+    public float health = 120f;
+
+    int lane = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -27,12 +29,35 @@ public class Player : MonoBehaviour
         {
             rig.velocity = transform.right * -speed;
         }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            if (lane > 1)
+            {
+                lane--;
+                transform.position += transform.forward * 2;
+            }
+
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (lane < 3)
+            {
+                lane++;
+                transform.position += transform.forward * -2;
+            }
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (lane == 1)
+            boss.GetComponent<Boss>().TakeDamage();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.name == "Projectile")
         {
+            if (health > 0)
             health -= 10f;
         }
     }

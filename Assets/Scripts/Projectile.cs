@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
     [SerializeField] AudioSource music;
     [SerializeField] AudioSource test;
     [SerializeField] float bpm;
-    [SerializeField] float interval = 0;
+    public float interval = 0;
     int lastInterval = 0;
 
     // Start is called before the first frame update
