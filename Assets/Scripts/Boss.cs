@@ -6,6 +6,8 @@ public class Boss : MonoBehaviour
 {
     public float health = 120f;
     [SerializeField] Projectile projectile;
+    public GameManager game;
+    public Player player;
 
     // Start is called before the first frame update
     void Start()
@@ -16,12 +18,13 @@ public class Boss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        transform.rotation = Quaternion.LookRotation(player.transform.position - new Vector3(0, player.transform.position.y, 0), transform.up);
+        transform.Rotate(Vector3.up * 90);
     }
 
     public void TakeDamage()
     {
-        switch ((Mathf.Round(projectile.interval * 2f) / 2f) % 1)
+        switch ((Mathf.Round(game.interval * 2f) / 2f) % 1)
         {
             case 0:
             if (health > 0)

@@ -18,10 +18,17 @@ public class GameManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] TextMeshPro bossHealth;
     [SerializeField] TextMeshProUGUI playerHealth;
+    [SerializeField] TextMeshProUGUI menuText;
 
     [Header("Scripts")]
     [SerializeField] Boss boss;
     [SerializeField] Player player;
+    [SerializeField] Projectile projectile;
+
+    [Header("Rhythm")]
+    [SerializeField] float bpm;
+    public float interval = 0;
+    int lastInterval = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +40,45 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player.health == 0)
+        {
+            menuText.text = "You Died";
+            music.Stop();
+            Time.timeScale = 0;
+            PauseMenu.SetActive(true);
+            isPaused = true;
+            anim.SetBool("Paused", isPaused);
+        }
+        else if (boss.health == 0)
+        {
+            menuText.text = "You Win";
+            music.Stop();
+            Time.timeScale = 0;
+            PauseMenu.SetActive(true);
+            isPaused = true;
+            anim.SetBool("Paused", isPaused);
+        }
+        else if (!music.isPlaying)
+        {
+            menuText.text = "You Lost";
+            music.Stop();
+            Time.timeScale = 0;
+            PauseMenu.SetActive(true);
+            isPaused = true;
+            anim.SetBool("Paused", isPaused);
+        }
+        
+
+        interval = (music.timeSamples / (music.clip.frequency * (60 / (bpm * 2)))) - 0.027f;
+        if (Mathf.FloorToInt(interval) != lastInterval)
+        {
+            lastInterval = Mathf.FloorToInt(interval);
+            if (lastInterval % 4 == 0)
+            {
+                projectile.FireProjectile();
+            }
+        }
+
         bossHealth.text = $"Health: {boss.health}";
         playerHealth.text = $"Health: {player.health}";
 

@@ -24,7 +24,7 @@ public class Buttons : MonoBehaviour
 
     public void PlayDemo()
     {
-        SceneManager.LoadScene("TestScene");
+        SceneManager.LoadScene("Tutorial");
     }
 
     public void Retry()

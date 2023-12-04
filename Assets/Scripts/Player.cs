@@ -6,10 +6,13 @@ public class Player : MonoBehaviour
 {
     Rigidbody rig;
     [SerializeField] GameObject boss;
+    [SerializeField] GameManager game;
     [SerializeField] float speed;
     public float health = 120f;
 
-    int lane = 3;
+    float lane = 3;
+
+    float timeCounter;
 
     // Start is called before the first frame update
     void Start()
@@ -20,30 +23,56 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.rotation = Quaternion.LookRotation(boss.transform.position - transform.position, transform.up);
+        transform.rotation = Quaternion.LookRotation(new Vector3(0, transform.position.y, 0) - transform.position, transform.up);
+        transform.Rotate(Vector3.up * 90);
+
         if (Input.GetKey(KeyCode.D))
         {
-            rig.velocity = transform.right * speed;
+            rig.velocity = transform.forward * speed;
+            speed = 9;
+            speed = 10;
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            rig.velocity = transform.right * -speed;
+            rig.velocity = transform.forward * -speed;
+            speed = 9;
+            speed = 10;
         }
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            rig.velocity = Vector3.zero;
+        }
+        else if (Input.GetKeyUp(KeyCode.A))
+        {
+            rig.velocity = Vector3.zero;
+        }
+
+        
+
         if (Input.GetKeyDown(KeyCode.W))
         {
             if (lane > 1)
             {
-                lane--;
-                transform.position += transform.forward * 2;
+                switch ((Mathf.Round(game.interval * 2f) / 2f) % 1)
+                {
+                    case 0:
+                        lane--;
+                        transform.position += transform.forward * 0.8f;
+                        break;
+                }
             }
-
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
             if (lane < 3)
             {
-                lane++;
-                transform.position += transform.forward * -2;
+                switch ((Mathf.Round(game.interval * 2f) / 2f) % 1)
+                {
+                    case 0:
+                        lane++;
+                        transform.position += transform.forward * -0.8f;
+                        break;
+                }
             }
         }
         if (Input.GetMouseButtonDown(0))
@@ -51,6 +80,12 @@ public class Player : MonoBehaviour
             if (lane == 1)
             boss.GetComponent<Boss>().TakeDamage();
         }
+        transform.position = (new Vector3(0, transform.position.y, 0) - transform.position).normalized * -(0.8f * lane - 1 + 1.64f);
+    }
+
+    private void LateUpdate()
+    {
+        
     }
 
     private void OnTriggerEnter(Collider other)
