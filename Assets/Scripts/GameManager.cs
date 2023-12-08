@@ -30,6 +30,9 @@ public class GameManager : MonoBehaviour
     public float interval = 0;
     int lastInterval = 0;
 
+    public FMODUnity.EventReference ughSFX;
+    FMOD.Studio.EventInstance ugh;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +54,9 @@ public class GameManager : MonoBehaviour
         }
         else if (boss.health == 0)
         {
+            ugh = FMODUnity.RuntimeManager.CreateInstance(ughSFX);
+            ugh.start();
+
             menuText.text = "You Win";
             music.Stop();
             Time.timeScale = 0;

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{5b835d6a-2e01-43d6-80a2-8e109e062c65}">
+		<property name="assetPath">
+			<value>scech.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.66634920634920636</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{bbd4aefe-74b9-4eeb-92a0-d69bcbf1b365}</destination>
+		</relationship>
+	</object>
+</objects>

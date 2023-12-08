@@ -9,6 +9,10 @@ public class Boss : MonoBehaviour
     public GameManager game;
     public Player player;
 
+    public FMODUnity.EventReference attackSFX;
+    FMOD.Studio.EventInstance attack;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +28,9 @@ public class Boss : MonoBehaviour
 
     public void TakeDamage()
     {
+        attack = FMODUnity.RuntimeManager.CreateInstance(attackSFX);
+        attack.start();
+
         switch ((Mathf.Round(game.interval * 2f) / 2f) % 1)
         {
             case 0:

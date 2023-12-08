@@ -14,6 +14,9 @@ public class Player : MonoBehaviour
 
     float timeCounter;
 
+    public FMODUnity.EventReference ouchSFX;
+    FMOD.Studio.EventInstance ouch;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -90,6 +93,9 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        ouch = FMODUnity.RuntimeManager.CreateInstance(ouchSFX);
+        ouch.start();
+
         if (other.name == "Projectile")
         {
             if (health > 0)
