@@ -10,9 +10,12 @@ public class Player : MonoBehaviour
     [SerializeField] float speed;
     public float health = 120f;
 
-    float lane = 3;
+    [SerializeField] float lane = 3;
 
     float timeCounter;
+
+    bool isMoving;
+
 
     // Start is called before the first frame update
     void Start()
@@ -26,25 +29,29 @@ public class Player : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(new Vector3(0, transform.position.y, 0) - transform.position, transform.up);
         transform.Rotate(Vector3.up * 90);
 
+        float radius = 0.8f * lane - 1 + 1.64f;
+
         if (Input.GetKey(KeyCode.D))
         {
-            rig.velocity = transform.forward * speed;
-            speed = 9;
-            speed = 10;
+            timeCounter -= speed;
+            transform.position = Quaternion.AngleAxis(timeCounter, Vector3.up) * new Vector3(radius, 0f);
+            isMoving = true;
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            rig.velocity = transform.forward * -speed;
-            speed = 9;
-            speed = 10;
+            timeCounter += speed;
+            transform.position = Quaternion.AngleAxis(timeCounter, Vector3.up) * new Vector3(radius, 0f);
+            isMoving = true;
         }
         if (Input.GetKeyUp(KeyCode.D))
         {
             rig.velocity = Vector3.zero;
+            isMoving = false;
         }
         else if (Input.GetKeyUp(KeyCode.A))
         {
             rig.velocity = Vector3.zero;
+            isMoving = false;
         }
 
         
@@ -57,7 +64,14 @@ public class Player : MonoBehaviour
                 {
                     case 0:
                         lane--;
-                        transform.position += transform.forward * 0.8f;
+                        if (isMoving)
+                        {
+                            transform.position += transform.right * 0.8f;
+                        }
+                        else
+                        {
+                            transform.position -= transform.right * 0.8f;
+                        }
                         break;
                 }
             }
@@ -70,7 +84,14 @@ public class Player : MonoBehaviour
                 {
                     case 0:
                         lane++;
-                        transform.position += transform.forward * -0.8f;
+                        if (isMoving)
+                        {
+                            transform.position -= transform.right * 0.8f;
+                        }
+                        else
+                        {
+                            transform.position += transform.right * 0.8f;
+                        }
                         break;
                 }
             }
@@ -80,12 +101,6 @@ public class Player : MonoBehaviour
             if (lane == 1)
             boss.GetComponent<Boss>().TakeDamage();
         }
-        transform.position = (new Vector3(0, transform.position.y, 0) - transform.position).normalized * -(0.8f * lane - 1 + 1.64f);
-    }
-
-    private void LateUpdate()
-    {
-        
     }
 
     private void OnTriggerEnter(Collider other)

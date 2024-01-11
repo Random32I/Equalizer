@@ -1612,7 +1612,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boss: {fileID: 7406809597444749025}
   game: {fileID: 1425585844}
-  speed: 9
+  speed: 0.2
   health: 120
 --- !u!1001 &1488185292
 PrefabInstance:
@@ -1950,24 +1950,6 @@ Transform:
   m_Father: {fileID: 963194228}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1743617197 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b967a96f9245737438ba413db79c006b, type: 3}
-  m_PrefabInstance: {fileID: 1488185292}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1743617199
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1743617197}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 8.44483, y: 1, z: 7.9659133}
-  m_Center: {x: 0.1357677, y: 0, z: 0.19379401}
 --- !u!1 &1822645330
 GameObject:
   m_ObjectHideFlags: 0
