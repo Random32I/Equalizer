@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class GameManager : MonoBehaviour
     [Header("Music")]
     [SerializeField] AudioSource music;
     private float musicPauseTime;
+    [SerializeField] AudioSource charge;
+    [SerializeField] AudioSource fire;
 
     [Header("UI")]
     [SerializeField] TextMeshPro bossHealth;
@@ -24,11 +27,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] Boss boss;
     [SerializeField] Player player;
     [SerializeField] Projectile projectile;
+    [SerializeField] Tutorial tutorial;
 
     [Header("Rhythm")]
     [SerializeField] float bpm;
     public float interval = 0;
     int lastInterval = 0;
+
+    [Header("Tutorial")]
+    float timestamp;
 
     // Start is called before the first frame update
     void Start()
@@ -40,32 +47,35 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.health == 0)
+        if (!tutorial)
         {
-            menuText.text = "You Died";
-            music.Stop();
-            Time.timeScale = 0;
-            PauseMenu.SetActive(true);
-            isPaused = true;
-            anim.SetBool("Paused", isPaused);
-        }
-        else if (boss.health == 0)
-        {
-            menuText.text = "You Win";
-            music.Stop();
-            Time.timeScale = 0;
-            PauseMenu.SetActive(true);
-            isPaused = true;
-            anim.SetBool("Paused", isPaused);
-        }
-        else if (!music.isPlaying)
-        {
-            menuText.text = "You Lost";
-            music.Stop();
-            Time.timeScale = 0;
-            PauseMenu.SetActive(true);
-            isPaused = true;
-            anim.SetBool("Paused", isPaused);
+            if (player.health == 0)
+            {
+                menuText.text = "You Died";
+                music.Stop();
+                Time.timeScale = 0;
+                PauseMenu.SetActive(true);
+                isPaused = true;
+                anim.SetBool("Paused", isPaused);
+            }
+            else if (boss.health == 0)
+            {
+                menuText.text = "You Win";
+                music.Stop();
+                Time.timeScale = 0;
+                PauseMenu.SetActive(true);
+                isPaused = true;
+                anim.SetBool("Paused", isPaused);
+            }
+            else if (!music.isPlaying)
+            {
+                menuText.text = "You Lost";
+                music.Stop();
+                Time.timeScale = 0;
+                PauseMenu.SetActive(true);
+                isPaused = true;
+                anim.SetBool("Paused", isPaused);
+            }
         }
         
 
@@ -73,9 +83,75 @@ public class GameManager : MonoBehaviour
         if (Mathf.FloorToInt(interval) != lastInterval)
         {
             lastInterval = Mathf.FloorToInt(interval);
-            if (lastInterval % 4 == 0)
+            if (tutorial)
             {
-                projectile.FireProjectile();
+                if (tutorial.tutorialStage > 1)
+                {
+                    for (int i = 0; i < tutorial.GetChartLength(); i++)
+                    {
+                        if (tutorial.GetChart(i) == lastInterval)
+                        {
+                            fire.Play();
+                            projectile.FireProjectile();
+                            break;
+                        }
+                        else if (tutorial.GetChart(i) - 2 == lastInterval)
+                        {
+                            //charge.Play();
+                            break;
+                        }
+                    }
+                    switch (lastInterval)
+                    {
+                        case 64:
+                            if (tutorial.tutorialStage == 3)
+                            {
+                                if (player.health < 120)
+                                {
+                                    player.health = 120;
+                                    music.time = 0;
+                                }
+                                else
+                                {
+                                    timestamp = music.time;
+                                    music.Stop();
+                                    tutorial.StageComplete(timestamp);
+                                }
+                            }
+                            break;
+                        case 96:
+                            if (tutorial.tutorialStage == 4)
+                            {
+                                if (player.health < 120)
+                                {
+                                    player.health = 120;
+                                    music.time = timestamp;
+                                }
+                                else
+                                {
+                                    timestamp = music.time;
+                                    music.Stop();
+                                    tutorial.StageComplete(timestamp);
+                                }
+                            }
+                            break;
+                        case 128:
+                            if (tutorial.tutorialStage == 6)
+                            {
+                                if (boss.health == 120)
+                                {
+                                    music.time = timestamp;
+                                }
+                                else
+                                {
+                                    timestamp = music.time;
+                                    music.Stop();
+                                    tutorial.StageComplete(timestamp);
+                                }
+                            }
+                            break;
+                    }
+                }
             }
         }
 
