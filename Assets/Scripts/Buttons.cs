@@ -27,6 +27,11 @@ public class Buttons : MonoBehaviour
         SceneManager.LoadScene("Tutorial");
     }
 
+    public void PlayCamp()
+    {
+        SceneManager.LoadScene("Camp");
+    }
+
     public void Retry()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

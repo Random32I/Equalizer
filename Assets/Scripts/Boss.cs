@@ -22,14 +22,31 @@ public class Boss : MonoBehaviour
         transform.Rotate(Vector3.up * 90);
     }
 
-    public void TakeDamage()
+    public void TakeDamage(bool type)
     {
-        switch ((Mathf.Round(game.interval * 2f) / 2f) % 1)
+        //type true is melee, type false is range
+        if (type)
         {
-            case 0:
+            switch ((Mathf.Round(game.interval * 2f) / 2f) % 1)
+            {
+                case 0:
+                    if (health > 0)
+                        health -= 5;
+                    break;
+            }
+        }
+        else
+        {
             if (health > 0)
-                health -= 1; 
-            break;
+                health -= 2;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Reflected Projectile")
+        {
+            TakeDamage(false);
         }
     }
 }

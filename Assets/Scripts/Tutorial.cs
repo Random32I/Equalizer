@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
 public class Tutorial : MonoBehaviour
@@ -16,7 +15,7 @@ public class Tutorial : MonoBehaviour
 
     [SerializeField] AudioSource music;
     public int tutorialStage;
-    readonly List<int> chart = new() {
+    List<int> chart = new() {
     0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60,
     64, 66, 70, 71, 73, 75, 76, 80, 81, 82, 84, 87, 89, 91, 92,
     96, 100, 104, 108, 112, 114, 120, 126

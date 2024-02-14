@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject boss;
     [SerializeField] GameManager game;
     [SerializeField] float speed;
-    public float health = 120f;
+    public float health = 176f;
 
     [SerializeField] float lane = 3;
 
@@ -16,6 +16,11 @@ public class Player : MonoBehaviour
 
     bool isMoving;
     public bool canMove = true;
+
+
+    bool isParrying;
+    bool canParry = true;
+    bool failedParry;
 
     [Header("Sound Effects")]
     [SerializeField] AudioSource bossHit;
@@ -33,6 +38,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isParrying && failedParry)
+        {
+            isParrying = false;
+            failedParry = false;
+            canParry = true;
+            GetComponent<BoxCollider>().size /= 6;
+        }
+
         transform.rotation = Quaternion.LookRotation(new Vector3(0, transform.position.y, 0) - transform.position, transform.up);
         transform.Rotate(Vector3.up * 90);
 
@@ -111,9 +124,15 @@ public class Player : MonoBehaviour
             {
                 if (lane == 1)
                 {
-                    boss.GetComponent<Boss>().TakeDamage();
+                    boss.GetComponent<Boss>().TakeDamage(true);
                     bossHit.Play();
                 }
+            }
+            else if (Input.GetMouseButtonDown(1) && canParry)
+            {
+                isParrying = true;
+                canParry = false;
+                GetComponent<BoxCollider>().size *= 6;
             }
         }
     }
@@ -122,12 +141,31 @@ public class Player : MonoBehaviour
     {
         if (other.name == "Projectile")
         {
-            if (health > 0)
+            if (!isParrying)
             {
-                hitNoise.Play();
-                health -= 10f;
+                if (health > 0)
+                {
+                    hitNoise.Play();
+                    health -= 4f;
+                    Destroy(other.gameObject);
+                }
             }
+            else
+            {
+                other.GetComponent<Rigidbody>().velocity *= -1;
+                other.name = "Reflected Projectile";
+                isParrying = false;
+                canParry = true;
+                GetComponent<BoxCollider>().size /= 6;
+            }
+        }
+    }
 
+    private void FixedUpdate()
+    {
+        if (isParrying)
+        {
+            failedParry = true;
         }
     }
 

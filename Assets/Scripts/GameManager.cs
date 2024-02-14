@@ -4,6 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] TextMeshPro bossHealth;
-    [SerializeField] TextMeshProUGUI playerHealth;
+    [SerializeField] RawImage playerHealth;
     [SerializeField] TextMeshProUGUI menuText;
 
     [Header("Scripts")]
@@ -28,11 +29,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] Projectile projectile;
     [SerializeField] Tutorial tutorial;
+    [SerializeField] Camp camp;
 
     [Header("Rhythm")]
     [SerializeField] float bpm;
     public float interval = 0;
-    int lastInterval = 0;
+    public int lastInterval = 0;
 
     [Header("Tutorial")]
     float timestamp;
@@ -42,6 +44,11 @@ public class GameManager : MonoBehaviour
     {
         isPaused = false;
         Time.timeScale = 1;
+        projectile.speed = (2.44f*bpm)/60;
+        if (!tutorial)
+        {
+            music.Play();
+        }
     }
 
     // Update is called once per frame
@@ -153,10 +160,26 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
+            else
+            {
+                if (camp)
+                {
+                    if (camp.GetChart(0) == lastInterval)
+                    {
+                        fire.Play();
+                        projectile.FireProjectile();
+                        camp.RemoveChart();
+                    }
+                    else if (camp.GetChart(0) - 2 == lastInterval)
+                    {
+                        //charge.Play();
+                    }
+                }
+            }
         }
 
         bossHealth.text = $"Health: {boss.health}";
-        playerHealth.text = $"Health: {player.health}";
+        playerHealth.rectTransform.offsetMax = new Vector2((player.health - 166), playerHealth.rectTransform.offsetMax.y);
 
         bossHealth.transform.rotation = Quaternion.LookRotation(player.transform.position * -1); 
 

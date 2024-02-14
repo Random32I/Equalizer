@@ -7,13 +7,13 @@ public class Projectile : MonoBehaviour
     [Header("Projectile")]
     GameObject projectile;
     [SerializeField] GameObject player;
-    [SerializeField] float speed;
+    public float speed;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -39,7 +39,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.transform.name == "Wall" || collision.transform.name == "Player")
+        if (collision.transform.name == "Wall" || (collision.transform.name == "Boss" && name == "Reflected Projectile"))
         {
             Destroy(gameObject);
         }
