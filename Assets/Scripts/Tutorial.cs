@@ -41,7 +41,7 @@ public class Tutorial : MonoBehaviour
                     menuSelect.Play();
                     break;
                 case 1:
-                    tutorialText.text = "Try dodging this simple rhythm.";
+                    tutorialText.text = "You can also press Left Shift to dash out of the way! Try dodging this simple rhythm.";
                     tutorialStage++;
                     menuSelect.Play();
                     break;

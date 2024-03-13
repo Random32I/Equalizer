@@ -51,10 +51,6 @@ public class GameManager : MonoBehaviour
         isPaused = false;
         Time.timeScale = 1;
         projectile.speed = (2.44f*bpm)/60;
-        if (!tutorial)
-        {
-            music.Play();
-        }
     }
 
     // Update is called once per frame
