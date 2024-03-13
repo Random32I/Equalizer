@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class Buttons : MonoBehaviour
 {
+    [SerializeField] GameObject settingsMenu;
+    [SerializeField] GameObject normalMenu;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,5 +43,17 @@ public class Buttons : MonoBehaviour
     public void Title()
     {
         SceneManager.LoadScene("Title");
+    }
+
+    public void Settings()
+    {
+        settingsMenu.SetActive(true);
+        normalMenu.SetActive(false);
+    }
+
+    public void Back()
+    {
+        settingsMenu.SetActive(false);
+        normalMenu.SetActive(true);
     }
 }

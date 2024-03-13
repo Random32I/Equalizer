@@ -19,6 +19,13 @@ public class Projectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (name == "Projectile")
+        {
+            if (((player.transform.position - transform.position).normalized - (Vector3.up * 0.2f - transform.position).normalized).magnitude > Random.Range(1.85f, 2))
+            {
+                GetComponent<Rigidbody>().velocity = (player.transform.position - transform.position).normalized * speed;
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -28,6 +35,8 @@ public class Projectile : MonoBehaviour
 
     public void FireProjectile()
     {
+        Player playerComp = player.GetComponent<Player>();
+        float x = player.GetComponent<Player>().timeCounter % 360;
         if (gameObject.name == "Temp Projectile")
         {
             projectile = Instantiate(gameObject);

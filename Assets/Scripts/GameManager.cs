@@ -11,7 +11,13 @@ public class GameManager : MonoBehaviour
     [Header("Pausing")]
     [SerializeField] bool isPaused = false;
     [SerializeField] GameObject PauseMenu;
+    [SerializeField] GameObject EndMenu;
     [SerializeField] Animator anim;
+    [SerializeField] Image results;
+    [SerializeField] Image grade;
+    [SerializeField] Sprite clearHit;
+    [SerializeField] Sprite clearNoHit;
+    [SerializeField] Sprite[] letters = new Sprite[6];
 
     [Header("Music")]
     [SerializeField] AudioSource music;
@@ -56,30 +62,61 @@ public class GameManager : MonoBehaviour
     {
         if (!tutorial)
         {
+            if (boss.health < 0)
+                boss.health = 0;
+
+            if (player.health < 0)
+                player.health = 0;
+
             if (player.health == 0)
             {
-                menuText.text = "You Died";
                 music.Stop();
                 Time.timeScale = 0;
-                PauseMenu.SetActive(true);
+                EndMenu.SetActive(true);
                 isPaused = true;
                 anim.SetBool("Paused", isPaused);
             }
             else if (boss.health == 0)
             {
-                menuText.text = "You Win";
                 music.Stop();
                 Time.timeScale = 0;
-                PauseMenu.SetActive(true);
+                EndMenu.SetActive(true);
                 isPaused = true;
                 anim.SetBool("Paused", isPaused);
+                if (player.health == 176)
+                {
+                    grade.sprite = letters[0];
+                    if (grade.transform.localScale.x == grade.transform.localScale.y)
+                    {
+                        grade.transform.localScale -= Vector3.right * 0.2f;
+                    }
+                    results.sprite = clearNoHit;
+                }
+                else
+                {
+                    switch (Mathf.Floor(player.health/44))
+                    {
+                        case 0:
+                            grade.sprite = letters[4];
+                            break;
+                        case 1:
+                            grade.sprite = letters[3];
+                            break;
+                        case 2:
+                            grade.sprite = letters[2];
+                            break;
+                        case 3:
+                            grade.sprite = letters[1];
+                            break;
+                    }
+                    results.sprite = clearHit;
+                }
             }
             else if (!music.isPlaying)
             {
-                menuText.text = "You Lost";
                 music.Stop();
                 Time.timeScale = 0;
-                PauseMenu.SetActive(true);
+                EndMenu.SetActive(true);
                 isPaused = true;
                 anim.SetBool("Paused", isPaused);
             }
@@ -90,6 +127,11 @@ public class GameManager : MonoBehaviour
         if (Mathf.FloorToInt(interval) != lastInterval)
         {
             lastInterval = Mathf.FloorToInt(interval);
+            player.canAttack = true;
+            if (lastInterval % 2 == 0)
+            {
+                player.canDash = true;
+            }
             if (tutorial)
             {
                 if (tutorial.tutorialStage > 1)

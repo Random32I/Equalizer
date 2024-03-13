@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class Player : MonoBehaviour
 {
@@ -12,11 +13,15 @@ public class Player : MonoBehaviour
 
     [SerializeField] float lane = 3;
 
-    float timeCounter;
+    [SerializeField] ParticleSystem particles;
 
-    bool isMoving;
+    public float timeCounter;
+
+    public bool isMoving;
     public bool canMove = true;
-
+    public bool canDash = true;
+    public bool canAttack = true;
+    public int moveDirection;
 
     bool isParrying;
     bool canParry = true;
@@ -55,28 +60,40 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.D))
             {
-                timeCounter -= speed;
+                timeCounter -= speed * Time.deltaTime;
+                moveDirection = -1;
                 transform.position = Quaternion.AngleAxis(timeCounter, Vector3.up) * new Vector3(radius, 0f);
                 isMoving = true;
             }
             else if (Input.GetKey(KeyCode.A))
             {
-                timeCounter += speed;
+                timeCounter += speed * Time.deltaTime;
+                moveDirection = 1;
                 transform.position = Quaternion.AngleAxis(timeCounter, Vector3.up) * new Vector3(radius, 0f);
                 isMoving = true;
             }
             if (Input.GetKeyUp(KeyCode.D))
             {
                 rig.velocity = Vector3.zero;
+                moveDirection = 0;
                 isMoving = false;
             }
             else if (Input.GetKeyUp(KeyCode.A))
             {
                 rig.velocity = Vector3.zero;
+                moveDirection = 0;
                 isMoving = false;
             }
 
-
+            if (Input.GetKeyDown(KeyCode.LeftShift) && canDash && isMoving)
+            {
+                particles.transform.localRotation = Quaternion.Euler(Vector3.up * (-90 + 90 * moveDirection));
+                particles.Play();
+                timeCounter += speed * speed * Time.deltaTime * moveDirection;
+                transform.position = Quaternion.AngleAxis(timeCounter, Vector3.up) * new Vector3(radius, 0f);
+                isMoving = true;
+                canDash = false;
+            }
 
             if (Input.GetKeyDown(KeyCode.W))
             {
@@ -120,10 +137,11 @@ public class Player : MonoBehaviour
                     //}
                 }
             }
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && canAttack)
             {
                 if (lane == 1)
                 {
+                    canAttack = false;
                     boss.GetComponent<Boss>().TakeDamage(true);
                     bossHit.Play();
                 }
@@ -135,6 +153,10 @@ public class Player : MonoBehaviour
                 GetComponent<BoxCollider>().size *= 6;
             }
         }
+        else
+        {
+            isMoving = false;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -143,7 +165,7 @@ public class Player : MonoBehaviour
         {
             if (!isParrying)
             {
-                if (health > 0)
+                if (health > 3)
                 {
                     hitNoise.Play();
                     health -= 4f;

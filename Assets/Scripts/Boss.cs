@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class Boss : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class Boss : MonoBehaviour
     [SerializeField] Projectile projectile;
     public GameManager game;
     public Player player;
+    [SerializeField] ParticleSystem particles;
 
     // Start is called before the first frame update
     void Start()
@@ -31,14 +33,20 @@ public class Boss : MonoBehaviour
             {
                 case 0:
                     if (health > 0)
+                    {
+                        particles.Play();
                         health -= 5;
+                    }
                     break;
             }
         }
         else
         {
             if (health > 0)
+            {
+                particles.Play();
                 health -= 2;
+            }
         }
     }
 
