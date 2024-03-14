@@ -21,7 +21,7 @@ public class Projectile : MonoBehaviour
     {
         if (name == "Projectile")
         {
-            if (((player.transform.position - transform.position).normalized - (Vector3.up * 0.2f - transform.position).normalized).magnitude > Random.Range(1.85f, 2))
+            if (((player.transform.position - transform.position).normalized - (Vector3.up * 0.2f - transform.position).normalized).magnitude > Random.Range(1.75f, 2))
             {
                 GetComponent<Rigidbody>().velocity = (player.transform.position - transform.position).normalized * speed;
             }

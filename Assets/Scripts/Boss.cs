@@ -45,7 +45,7 @@ public class Boss : MonoBehaviour
             if (health > 0)
             {
                 particles.Play();
-                health -= 2;
+                health -= 10;
             }
         }
     }

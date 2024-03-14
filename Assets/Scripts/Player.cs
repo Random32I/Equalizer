@@ -165,10 +165,10 @@ public class Player : MonoBehaviour
         {
             if (!isParrying)
             {
-                if (health > 3)
+                if (health >= 2)
                 {
                     hitNoise.Play();
-                    health -= 4f;
+                    health -= 2f;
                     Destroy(other.gameObject);
                 }
             }
