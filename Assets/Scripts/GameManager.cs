@@ -26,7 +26,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] AudioSource fire;
 
     [Header("UI")]
-    [SerializeField] TextMeshPro bossHealth;
+    [SerializeField] GameObject bossHealth;
+    [SerializeField] GameObject bossHealthOutline;
     [SerializeField] RawImage playerHealth;
     [SerializeField] TextMeshProUGUI menuText;
 
@@ -216,10 +217,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        bossHealth.text = $"Health: {boss.health}";
+        bossHealth.transform.localScale = new Vector3 (-(boss.health * 0.9370001f / (400)),
+            bossHealth.transform.localScale.x, bossHealth.transform.localScale.z);
+
         playerHealth.rectTransform.offsetMax = new Vector2((player.health - 166), playerHealth.rectTransform.offsetMax.y);
 
-        bossHealth.transform.rotation = Quaternion.LookRotation(player.transform.position * -1); 
+        bossHealthOutline.transform.localRotation = Quaternion.LookRotation(GameObject.Find("Camera").transform.position); 
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
