@@ -5,6 +5,8 @@ using static UnityEngine.ParticleSystem;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] Animator anim;
+
     Rigidbody rig;
     [SerializeField] GameObject boss;
     [SerializeField] GameManager game;
@@ -43,6 +45,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        anim.SetBool("isMoving", isMoving);
         if (isParrying && failedParry)
         {
             isParrying = false;
